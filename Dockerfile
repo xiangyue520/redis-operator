@@ -3,8 +3,8 @@ FROM golang:1.13.3-alpine as go-builder
 RUN apk update && apk upgrade && \
     apk add --no-cache ca-certificates git mercurial
 
-ARG PROJECT_NAME=redis-cluster-operator
-ARG REPO_PATH=github.com/ucloud/$PROJECT_NAME
+ARG PROJECT_NAME=redis-operator
+ARG REPO_PATH=github.com/xiangyue520/$PROJECT_NAME
 ARG BUILD_PATH=${REPO_PATH}/cmd/manager
 
 # Build version and commit should be passed in when performing docker build

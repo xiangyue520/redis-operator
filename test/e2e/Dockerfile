@@ -7,8 +7,8 @@ RUN apt update && apt install -y git
 
 RUN go get -u github.com/onsi/ginkgo/ginkgo github.com/onsi/gomega/...
 
-ARG PROJECT_NAME=redis-cluster-operator
-ARG REPO_PATH=github.com/ucloud/$PROJECT_NAME
+ARG PROJECT_NAME=redis-operator
+ARG REPO_PATH=github.com/xiangyue520/$PROJECT_NAME
 
 RUN mkdir -p /go/src/${REPO_PATH}
 COPY . /go/src/${REPO_PATH}
