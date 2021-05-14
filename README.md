@@ -189,7 +189,12 @@ spec:
   # Increase the masterSize to trigger the scaling.
   masterSize: 4
   ClusterReplicas: 1
-  image: redis:5.0.4-alpine
+  image: redis:6.0
+```
+
+Apply yaml again
+```
+$ kubectl apply -f deploy/example/redis.kun_v1alpha1_distributedrediscluster_cr.yaml
 ```
 
 #### Scaling Down the Redis Cluster
@@ -205,10 +210,15 @@ metadata:
     redis.kun/scope: cluster-scoped
   name: example-distributedrediscluster
 spec:
-  # Increase the masterSize to trigger the scaling.
+  # decrease the masterSize to trigger the scaling.the min masterSize is 3 for redis cluster
   masterSize: 3
   ClusterReplicas: 1
-  image: redis:5.0.4-alpine
+  image: redis:6.0
+```
+
+Apply yaml again
+```
+$ kubectl apply -f deploy/example/redis.kun_v1alpha1_distributedrediscluster_cr.yaml
 ```
 
 #### Backup and Restore
