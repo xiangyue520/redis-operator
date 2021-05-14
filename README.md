@@ -1,4 +1,25 @@
-# redis-cluster-operator
+# redis-operator
+
+## 说明
+
+- 该operator是基于https://github.com/ucloud/redis-cluster-operator,不过我看有段时间没有维护了,自己拿到本地,发现运行不了,稍加修复和整改,并且发现原git是redis
+-cluster-operator,自己的想法是改成redis-operator,让其支持单机,哨兵和集群模式
+- 现在目前只支持集群模式,所以节点嘛,就最少3个了
+- 现在很多都是原来的github上的,operator镜像以及其他的,会逐渐进行更换
+- 将redis的镜像修改为6.0
+- 平时吧,偶尔时间可能不太够,欢迎有想法的朋友联系我,一起努力,嗯,就这么多
+
+## 环境准备
+- 下载当前git项目到本地
+- k8s中需要有helm,来进行安装operator
+- 需要集群中有redis-cluster-operator的镜像(dockerhub可以拉取): fishu/redis-cluster-operator:latest
+
+## 安装redis-cluster-operator并查看
+1. 进入到当前项目,然后执行命令:`cd charts/redis-cluster-operator && helm install redis-cluster-operator
+ .`,当出现一个安装完成后显示的版本信息,就说明创建好了![crd_install_success](/static/crd_install.png)
+2. 完成安装后,就可以跳过接下来的步骤(Deploy redis cluster operator)了,
+3. 执行`kubectl get po`,可以找到一个叫`redis-cluster-operator`的po,并且已经ready,那么说明就部署好了
+4. 直接进入下面的[使用步骤](#usage),如果想要自己亲手搭建crd的话,参照[Deploy redis cluster operator](#deploy-redis-cluster-operator)
 
 ## Overview
 
@@ -112,6 +133,8 @@ redis-cluster-operator   1/1     1            1           1d
 
 ### Usage
 #### Deploy a sample Redis Cluster
+
+>注意:创建的时候需要有redis的镜像,默认为redis:6.0
 
 NOTE: **Only the redis cluster that use persistent storage(pvc) can recover after accidental deletion or rolling update.Even if you do not use persistence(like rdb or aof), you need to set pvc for redis.**
 

@@ -6,7 +6,8 @@ metadata:
     redis.kun/scope: cluster-scoped
   name: example-distributedrediscluster
 spec:
-  image: redis:5.0.4-alpine
+#  image: redis:5.0.4-alpine
+  image: redis:6.0
   masterSize: 3
   clusterReplicas: 1
   config:

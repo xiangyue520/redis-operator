@@ -6,7 +6,7 @@ operator:
   namespace: ""  # keep this value "" if you want to deploy cluster-wide operator
   image_source: "fishu/redis-cluster-operator"
   image_tag: "latest"
-  imagePullPolicy: "Always"
+  imagePullPolicy: "IfNotPresent"
   resources:
     limits:
       cpu: 200m

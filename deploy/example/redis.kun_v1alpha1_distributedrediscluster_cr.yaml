@@ -9,4 +9,5 @@ spec:
   # Add fields here
   masterSize: 3
   clusterReplicas: 1
-  image: redis:5.0.4-alpine
+  # image: redis:5.0.4-alpine
+  image: redis:6.0
