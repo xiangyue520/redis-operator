@@ -19,9 +19,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 	"sigs.k8s.io/controller-runtime/pkg/source"
 
-	redisv1alpha1 "github.com/ucloud/redis-cluster-operator/pkg/apis/redis/v1alpha1"
-	"github.com/ucloud/redis-cluster-operator/pkg/k8sutil"
-	"github.com/ucloud/redis-cluster-operator/pkg/utils"
+	redisv1alpha1 "github.com/xiangyue520/redis-operator/pkg/apis/redis/v1alpha1"
+	"github.com/xiangyue520/redis-operator/pkg/k8sutil"
+	"github.com/xiangyue520/redis-operator/pkg/utils"
 )
 
 var (

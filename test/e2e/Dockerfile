@@ -14,4 +14,4 @@ RUN mkdir -p /go/src/${REPO_PATH}
 COPY . /go/src/${REPO_PATH}
 RUN chmod +x /go/src/${REPO_PATH}/hack/e2e.sh
 
-CMD /go/src/github.com/ucloud/redis-cluster-operator/hack/e2e.sh
+CMD /go/src/github.com/xiangyue520/redis-operator/hack/e2e.sh

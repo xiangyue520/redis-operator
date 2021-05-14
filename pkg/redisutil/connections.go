@@ -10,7 +10,7 @@ import (
 
 	"github.com/go-logr/logr"
 	"github.com/mediocregopher/radix.v2/redis"
-	"github.com/ucloud/redis-cluster-operator/pkg/utils"
+	"github.com/xiangyue520/redis-operator/pkg/utils"
 )
 
 const (

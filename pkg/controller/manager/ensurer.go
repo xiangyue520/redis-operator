@@ -8,13 +8,13 @@ import (
 	"k8s.io/apimachinery/pkg/api/errors"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
-	redisv1alpha1 "github.com/ucloud/redis-cluster-operator/pkg/apis/redis/v1alpha1"
-	"github.com/ucloud/redis-cluster-operator/pkg/k8sutil"
-	"github.com/ucloud/redis-cluster-operator/pkg/osm"
-	"github.com/ucloud/redis-cluster-operator/pkg/resources/configmaps"
-	"github.com/ucloud/redis-cluster-operator/pkg/resources/poddisruptionbudgets"
-	"github.com/ucloud/redis-cluster-operator/pkg/resources/services"
-	"github.com/ucloud/redis-cluster-operator/pkg/resources/statefulsets"
+	redisv1alpha1 "github.com/xiangyue520/redis-operator/pkg/apis/redis/v1alpha1"
+	"github.com/xiangyue520/redis-operator/pkg/k8sutil"
+	"github.com/xiangyue520/redis-operator/pkg/osm"
+	"github.com/xiangyue520/redis-operator/pkg/resources/configmaps"
+	"github.com/xiangyue520/redis-operator/pkg/resources/poddisruptionbudgets"
+	"github.com/xiangyue520/redis-operator/pkg/resources/services"
+	"github.com/xiangyue520/redis-operator/pkg/resources/statefulsets"
 )
 
 type IEnsureResource interface {

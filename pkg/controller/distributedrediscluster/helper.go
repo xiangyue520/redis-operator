@@ -8,11 +8,11 @@ import (
 	"github.com/go-logr/logr"
 	corev1 "k8s.io/api/core/v1"
 
-	redisv1alpha1 "github.com/ucloud/redis-cluster-operator/pkg/apis/redis/v1alpha1"
-	"github.com/ucloud/redis-cluster-operator/pkg/config"
-	"github.com/ucloud/redis-cluster-operator/pkg/k8sutil"
-	"github.com/ucloud/redis-cluster-operator/pkg/redisutil"
-	"github.com/ucloud/redis-cluster-operator/pkg/utils"
+	redisv1alpha1 "github.com/xiangyue520/redis-operator/pkg/apis/redis/v1alpha1"
+	"github.com/xiangyue520/redis-operator/pkg/config"
+	"github.com/xiangyue520/redis-operator/pkg/k8sutil"
+	"github.com/xiangyue520/redis-operator/pkg/redisutil"
+	"github.com/xiangyue520/redis-operator/pkg/utils"
 )
 
 var (

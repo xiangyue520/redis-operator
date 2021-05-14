@@ -26,14 +26,14 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
 
-	"github.com/ucloud/redis-cluster-operator/pkg/apis"
-	redisv1alpha1 "github.com/ucloud/redis-cluster-operator/pkg/apis/redis/v1alpha1"
-	config2 "github.com/ucloud/redis-cluster-operator/pkg/config"
-	"github.com/ucloud/redis-cluster-operator/pkg/controller"
-	"github.com/ucloud/redis-cluster-operator/pkg/controller/distributedrediscluster"
-	"github.com/ucloud/redis-cluster-operator/pkg/controller/redisclusterbackup"
-	"github.com/ucloud/redis-cluster-operator/pkg/utils"
-	"github.com/ucloud/redis-cluster-operator/version"
+	"github.com/xiangyue520/redis-operator/pkg/apis"
+	redisv1alpha1 "github.com/xiangyue520/redis-operator/pkg/apis/redis/v1alpha1"
+	config2 "github.com/xiangyue520/redis-operator/pkg/config"
+	"github.com/xiangyue520/redis-operator/pkg/controller"
+	"github.com/xiangyue520/redis-operator/pkg/controller/distributedrediscluster"
+	"github.com/xiangyue520/redis-operator/pkg/controller/redisclusterbackup"
+	"github.com/xiangyue520/redis-operator/pkg/utils"
+	"github.com/xiangyue520/redis-operator/version"
 )
 
 // Change below variables to serve metrics on different host or port.

@@ -2,7 +2,7 @@
 
 set -e
 
-readonly REPO_PATH=github.com/ucloud/redis-cluster-operator
+readonly REPO_PATH=github.com/xiangyue520/redis-operator
 
 if [[ -z ${STORAGECLASSNAME} ]]; then
     echo "env STORAGECLASSNAME not set"

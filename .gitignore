@@ -81,3 +81,6 @@ vendor/*
 /Dockerfile-withvendor
 Dockerfile-TZSH
 skaffold.yaml
+
+#macos
+.DS_Store

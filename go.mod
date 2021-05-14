@@ -1,4 +1,4 @@
-module github.com/ucloud/redis-cluster-operator
+module github.com/xiangyue520/redis-operator
 
 require (
 	github.com/appscode/go v0.0.0-20191006073906-e3d193d493fc
@@ -14,6 +14,7 @@ require (
 	github.com/pkg/errors v0.8.1
 	github.com/satori/go.uuid v1.2.0
 	github.com/spf13/pflag v1.0.5
+	github.com/xiangyue520/redis-operator v0.2.5
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
 	gomodules.xyz/stow v0.2.3
 	k8s.io/api v0.0.0

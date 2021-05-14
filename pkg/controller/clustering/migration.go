@@ -7,8 +7,8 @@ import (
 
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 
-	redisv1alpha1 "github.com/ucloud/redis-cluster-operator/pkg/apis/redis/v1alpha1"
-	"github.com/ucloud/redis-cluster-operator/pkg/redisutil"
+	redisv1alpha1 "github.com/xiangyue520/redis-operator/pkg/apis/redis/v1alpha1"
+	"github.com/xiangyue520/redis-operator/pkg/redisutil"
 )
 
 var log = logf.Log.WithName("clustering")

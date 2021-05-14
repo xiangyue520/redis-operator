@@ -5,7 +5,7 @@
 set -xeou pipefail
 
 GOPATH=$(go env GOPATH)
-REPO_ROOT=$GOPATH/src/github.com/ucloud/redis-cluster-operator
+REPO_ROOT=$GOPATH/src/github.com/xiangyue520/redis-operator
 
 source "$REPO_ROOT/hack/lib/lib.sh"
 source "$REPO_ROOT/hack/lib/image.sh"

@@ -1,7 +1,7 @@
 SHELL=/bin/bash -o pipefail
 
-PROJECT_NAME=redis-cluster-operator
-REPO=ucloud/$(PROJECT_NAME)
+PROJECT_NAME=redis-operator
+REPO=xiangyue520/$(PROJECT_NAME)
 
 # replace with your public registry
 ALTREPO=$(DOCKER_REGISTRY)/$(PROJECT_NAME)

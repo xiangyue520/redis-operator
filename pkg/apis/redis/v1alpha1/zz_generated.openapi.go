@@ -11,12 +11,12 @@ import (
 
 func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenAPIDefinition {
 	return map[string]common.OpenAPIDefinition{
-		"github.com/ucloud/redis-cluster-operator/pkg/apis/redis/v1alpha1.DistributedRedisCluster":       schema_pkg_apis_redis_v1alpha1_DistributedRedisCluster(ref),
-		"github.com/ucloud/redis-cluster-operator/pkg/apis/redis/v1alpha1.DistributedRedisClusterSpec":   schema_pkg_apis_redis_v1alpha1_DistributedRedisClusterSpec(ref),
-		"github.com/ucloud/redis-cluster-operator/pkg/apis/redis/v1alpha1.DistributedRedisClusterStatus": schema_pkg_apis_redis_v1alpha1_DistributedRedisClusterStatus(ref),
-		"github.com/ucloud/redis-cluster-operator/pkg/apis/redis/v1alpha1.RedisClusterBackup":            schema_pkg_apis_redis_v1alpha1_RedisClusterBackup(ref),
-		"github.com/ucloud/redis-cluster-operator/pkg/apis/redis/v1alpha1.RedisClusterBackupSpec":        schema_pkg_apis_redis_v1alpha1_RedisClusterBackupSpec(ref),
-		"github.com/ucloud/redis-cluster-operator/pkg/apis/redis/v1alpha1.RedisClusterBackupStatus":      schema_pkg_apis_redis_v1alpha1_RedisClusterBackupStatus(ref),
+		"github.com/xiangyue520/redis-operator/pkg/apis/redis/v1alpha1.DistributedRedisCluster":       schema_pkg_apis_redis_v1alpha1_DistributedRedisCluster(ref),
+		"github.com/xiangyue520/redis-operator/pkg/apis/redis/v1alpha1.DistributedRedisClusterSpec":   schema_pkg_apis_redis_v1alpha1_DistributedRedisClusterSpec(ref),
+		"github.com/xiangyue520/redis-operator/pkg/apis/redis/v1alpha1.DistributedRedisClusterStatus": schema_pkg_apis_redis_v1alpha1_DistributedRedisClusterStatus(ref),
+		"github.com/xiangyue520/redis-operator/pkg/apis/redis/v1alpha1.RedisClusterBackup":            schema_pkg_apis_redis_v1alpha1_RedisClusterBackup(ref),
+		"github.com/xiangyue520/redis-operator/pkg/apis/redis/v1alpha1.RedisClusterBackupSpec":        schema_pkg_apis_redis_v1alpha1_RedisClusterBackupSpec(ref),
+		"github.com/xiangyue520/redis-operator/pkg/apis/redis/v1alpha1.RedisClusterBackupStatus":      schema_pkg_apis_redis_v1alpha1_RedisClusterBackupStatus(ref),
 	}
 }
 
@@ -48,19 +48,19 @@ func schema_pkg_apis_redis_v1alpha1_DistributedRedisCluster(ref common.Reference
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/ucloud/redis-cluster-operator/pkg/apis/redis/v1alpha1.DistributedRedisClusterSpec"),
+							Ref: ref("github.com/xiangyue520/redis-operator/pkg/apis/redis/v1alpha1.DistributedRedisClusterSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/ucloud/redis-cluster-operator/pkg/apis/redis/v1alpha1.DistributedRedisClusterStatus"),
+							Ref: ref("github.com/xiangyue520/redis-operator/pkg/apis/redis/v1alpha1.DistributedRedisClusterStatus"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/ucloud/redis-cluster-operator/pkg/apis/redis/v1alpha1.DistributedRedisClusterSpec", "github.com/ucloud/redis-cluster-operator/pkg/apis/redis/v1alpha1.DistributedRedisClusterStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/xiangyue520/redis-operator/pkg/apis/redis/v1alpha1.DistributedRedisClusterSpec", "github.com/xiangyue520/redis-operator/pkg/apis/redis/v1alpha1.DistributedRedisClusterStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -175,7 +175,7 @@ func schema_pkg_apis_redis_v1alpha1_DistributedRedisClusterSpec(ref common.Refer
 					},
 					"storage": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/ucloud/redis-cluster-operator/pkg/apis/redis/v1alpha1.RedisStorage"),
+							Ref: ref("github.com/xiangyue520/redis-operator/pkg/apis/redis/v1alpha1.RedisStorage"),
 						},
 					},
 					"resources": {
@@ -192,7 +192,7 @@ func schema_pkg_apis_redis_v1alpha1_DistributedRedisClusterSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"github.com/ucloud/redis-cluster-operator/pkg/apis/redis/v1alpha1.RedisStorage", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PodSecurityContext", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration"},
+			"github.com/xiangyue520/redis-operator/pkg/apis/redis/v1alpha1.RedisStorage", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PodSecurityContext", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration"},
 	}
 }
 
@@ -228,7 +228,7 @@ func schema_pkg_apis_redis_v1alpha1_DistributedRedisClusterStatus(ref common.Ref
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("github.com/ucloud/redis-cluster-operator/pkg/apis/redis/v1alpha1.RedisClusterNode"),
+										Ref: ref("github.com/xiangyue520/redis-operator/pkg/apis/redis/v1alpha1.RedisClusterNode"),
 									},
 								},
 							},
@@ -239,7 +239,7 @@ func schema_pkg_apis_redis_v1alpha1_DistributedRedisClusterStatus(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"github.com/ucloud/redis-cluster-operator/pkg/apis/redis/v1alpha1.RedisClusterNode"},
+			"github.com/xiangyue520/redis-operator/pkg/apis/redis/v1alpha1.RedisClusterNode"},
 	}
 }
 
@@ -271,19 +271,19 @@ func schema_pkg_apis_redis_v1alpha1_RedisClusterBackup(ref common.ReferenceCallb
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/ucloud/redis-cluster-operator/pkg/apis/redis/v1alpha1.RedisClusterBackupSpec"),
+							Ref: ref("github.com/xiangyue520/redis-operator/pkg/apis/redis/v1alpha1.RedisClusterBackupSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/ucloud/redis-cluster-operator/pkg/apis/redis/v1alpha1.RedisClusterBackupStatus"),
+							Ref: ref("github.com/xiangyue520/redis-operator/pkg/apis/redis/v1alpha1.RedisClusterBackupStatus"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/ucloud/redis-cluster-operator/pkg/apis/redis/v1alpha1.RedisClusterBackupSpec", "github.com/ucloud/redis-cluster-operator/pkg/apis/redis/v1alpha1.RedisClusterBackupStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/xiangyue520/redis-operator/pkg/apis/redis/v1alpha1.RedisClusterBackupSpec", "github.com/xiangyue520/redis-operator/pkg/apis/redis/v1alpha1.RedisClusterBackupStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 

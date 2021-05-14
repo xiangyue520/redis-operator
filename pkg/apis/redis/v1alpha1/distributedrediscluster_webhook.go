@@ -14,7 +14,7 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
-	"github.com/ucloud/redis-cluster-operator/pkg/utils"
+	"github.com/xiangyue520/redis-operator/pkg/utils"
 )
 
 var log = logf.Log.WithName("drc-resource")

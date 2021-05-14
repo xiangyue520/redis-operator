@@ -8,9 +8,9 @@ import (
 	"github.com/go-logr/logr"
 	corev1 "k8s.io/api/core/v1"
 
-	redisv1alpha1 "github.com/ucloud/redis-cluster-operator/pkg/apis/redis/v1alpha1"
-	"github.com/ucloud/redis-cluster-operator/pkg/redisutil"
-	"github.com/ucloud/redis-cluster-operator/pkg/utils"
+	redisv1alpha1 "github.com/xiangyue520/redis-operator/pkg/apis/redis/v1alpha1"
+	"github.com/xiangyue520/redis-operator/pkg/redisutil"
+	"github.com/xiangyue520/redis-operator/pkg/utils"
 )
 
 func SetClusterFailed(status *redisv1alpha1.DistributedRedisClusterStatus, reason string) {
