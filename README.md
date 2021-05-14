@@ -144,7 +144,7 @@ $ kubectl apply -f deploy/example/redis.kun_v1alpha1_distributedrediscluster_cr.
 
 Verify that the cluster instances and its components are running.
 ```
-$ kubectl get distributedrediscluster
+$ kubectl get distributedrediscluster或者使用kubectl get drc
 NAME                              MASTERSIZE   STATUS    AGE
 example-distributedrediscluster   3            Scaling   11s
 
