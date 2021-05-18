@@ -152,15 +152,16 @@ func (a *Admin) getInfos(c IClient, addr string) (*NodeInfos, error) {
 		return nil, err
 	}
 
-	var raw string
-	var err error
-	raw, err = resp.Str()
+	//var raw string
+	//var err error
+	raw, err := resp.Result()
 
 	if err != nil {
 		return nil, fmt.Errorf("wrong format from CLUSTER NODES: %v", err)
 	}
 
-	nodeInfos := DecodeNodeInfos(&raw, addr, a.log)
+	res:=raw.(string)
+	nodeInfos := DecodeNodeInfos(&res, addr, a.log)
 
 	return nodeInfos, nil
 }
@@ -186,15 +187,15 @@ func (a *Admin) clusterKnowNodes(c IClient, addr string) (int, error) {
 		return 0, err
 	}
 
-	var raw string
-	var err error
-	raw, err = resp.Str()
+	//var raw string
+	//var err error
+	raw, err := resp.Result()
 
 	if err != nil {
 		return 0, fmt.Errorf("wrong format from CLUSTER INFO: %v", err)
 	}
 
-	match := clusterKnownNodesRE.FindStringSubmatch(raw)
+	match := clusterKnownNodesRE.FindStringSubmatch(raw.(string))
 	if len(match) == 0 {
 		return 0, fmt.Errorf("cluster_known_nodes regex not found")
 	}
@@ -319,19 +320,40 @@ func (a *Admin) AttachNodeToCluster(addr string) error {
 
 // GetAllConfig get redis config by CONFIG GET *
 func (a *Admin) GetAllConfig(c IClient, addr string) (map[string]string, error) {
-	resp := c.Cmd("CONFIG", "GET", "*")
-	if err := a.Connections().ValidateResp(resp, addr, "unable to retrieve config"); err != nil {
-		return nil, err
-	}
-
-	var raw map[string]string
-	var err error
-	raw, err = resp.Map()
-
-	if err != nil {
+	ctx:=c.Client().Context()
+	resp,err:=c.Client().ConfigGet(ctx,"*").Result()
+	if(err !=nil){
 		return nil, fmt.Errorf("wrong format from CONFIG GET *: %v", err)
 	}
+	//自定义实现,将config文件进行映射为map
+	raw := map[string]string{}
+	for index, v := range resp {
+		if index & 1 == 0{
+			//fmt.Println(v)
+			key := v.(string)
+			value:=resp[index+1]
+			raw[key]=value.(string)
+		}
+	}
 
+	//获取使用此种方式来进行获取
+	//res, err:=client.Do(ctx,"CONFIG", "GET", "*").Result()
+	////fmt.Println(res)
+	//if(err !=nil){
+	//	fmt.Println(err)
+	//}
+	////reflect.TypeOf(res)
+	//tmp:=res.([]interface{})
+	//raw := map[string]string{}
+	//for index, v := range tmp {
+	//	if index & 1 == 0{
+	//		//fmt.Println(v)
+	//		key := v.(string)
+	//		value:=tmp[index+1]
+	//		raw[key]=value.(string)
+	//	}
+	//}
+	//fmt.Println(raw)
 	return raw, nil
 }
 
@@ -407,7 +429,9 @@ func (a *Admin) MigrateKeys(addr string, dest *Node, slots []Slot, batch int, ti
 			if err := a.Connections().ValidateResp(resp, addr, "Unable to run command GETKEYSINSLOT"); err != nil {
 				return keyCount, err
 			}
-			keys, err := resp.List()
+			res,err:=resp.Result()
+			keys:=res.([]string)
+			//keys, err := resp.List()
 			if err != nil {
 				a.log.Error(err, "wrong returned format for CLUSTER GETKEYSINSLOT")
 				return keyCount, err
@@ -446,7 +470,9 @@ func (a *Admin) MigrateKeysInSlot(addr string, dest *Node, slot Slot, batch int,
 		if err := a.Connections().ValidateResp(resp, addr, "Unable to run command GETKEYSINSLOT"); err != nil {
 			return keyCount, err
 		}
-		keys, err := resp.List()
+		res,err:=resp.Result()
+		keys:=res.([]string)
+		//keys, err := resp.list()
 		if err != nil {
 			a.log.Error(err, "wrong returned format for CLUSTER GETKEYSINSLOT")
 			return keyCount, err
@@ -502,7 +528,6 @@ func (a *Admin) ForgetNode(id string) error {
 			a.log.Error(err, fmt.Sprintf("cannot force a forget on node %s, for node %s", nodeAddr, id))
 			continue
 		}
-
 		a.log.Info("CLUSTER FORGET", "id", id, "from", nodeAddr)
 		resp := c.Cmd("CLUSTER", "FORGET", id)
 		a.Connections().ValidateResp(resp, nodeAddr, "Unable to execute FORGET command")

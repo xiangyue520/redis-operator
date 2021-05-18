@@ -1,7 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: redis-cluster-operator
+  name: redis-operator
 rules:
   - apiGroups:
       - ""

@@ -12,14 +12,14 @@
 ## 环境准备
 - 下载当前git项目到本地
 - k8s中需要有helm,来进行安装operator
-- 需要集群中有redis-cluster-operator的镜像(dockerhub可以拉取): fishu/redis-cluster-operator:latest
+- 需要集群中有redis-operator的镜像(dockerhub可以拉取): xiangyue520/redis-operator:latest,如果找不到,可以暂时用v0.2.5
 
-## 安装redis-cluster-operator并查看
-1. 进入到当前项目,然后执行命令:`cd charts/redis-cluster-operator && helm install redis-cluster-operator
+## 安装redis-operator并查看
+1. 进入到当前项目,然后执行命令:`cd charts/redis-cluster-operator && helm install redis-operator
  .`,当出现一个安装完成后显示的版本信息,就说明创建好了![crd_install_success](/static/crd_install.png)
 2. 完成安装后,就可以跳过接下来的步骤(Deploy redis cluster operator)了,
-3. 执行`kubectl get po`,可以找到一个叫`redis-cluster-operator`的po,并且已经ready,那么说明就部署好了
-4. 直接进入下面的[使用步骤](#usage),如果想要自己亲手搭建crd的话,参照[Deploy redis cluster operator](#deploy-redis-cluster-operator)
+3. 执行`kubectl get po`,可以找到一个叫`redis-operator`的po,并且已经ready,那么说明就部署好了
+4. 直接进入下面的[使用步骤](#usage),如果想要自己亲手搭建crd的话,参照[Deploy redis operator](#deploy-redis-operator)
 
 ## Overview
 
@@ -45,7 +45,7 @@ Table of Contents
       * [Prerequisites](#prerequisites)
       * [Features](#features)
       * [Quick Start](#quick-start)
-         * [Deploy redis cluster operator](#deploy-redis-cluster-operator)
+         * [Deploy redis operator](#deploy-redis-operator)
             * [Install Step by step](#install-step-by-step)
             * [Install using helm chart](#install-using-helm-chart)
          * [Usage](#usage)
@@ -64,7 +64,7 @@ Table of Contents
 
 ## Prerequisites
 
-* go version v1.13+.
+* go version v1.14+.
 * Access to a Kubernetes v1.13.10 cluster.
 
 ## Features
@@ -85,7 +85,7 @@ Table of Contents
 
 ## Quick Start
 
-### Deploy redis cluster operator
+### Deploy redis operator
 
 #### Install Step by step
 

@@ -1,7 +1,6 @@
 package clustering
 
 import (
-	"reflect"
 	"testing"
 
 	"github.com/xiangyue520/redis-operator/pkg/redisutil"
@@ -137,155 +136,155 @@ func TestDispatchSlotToMaster(t *testing.T) {
 	}
 }
 
-func Test_buildSlotsByNode(t *testing.T) {
-	redis1 := &redisutil.Node{ID: "redis1", Slots: []redisutil.Slot{0, 1, 2, 3, 4, 5, 6, 7, 8}}
-	redis2 := &redisutil.Node{ID: "redis2", Slots: []redisutil.Slot{}}
-	redis3 := &redisutil.Node{ID: "redis3", Slots: []redisutil.Slot{}}
-
-	redis4 := &redisutil.Node{ID: "redis4", Slots: []redisutil.Slot{0, 1, 2, 3, 4}}
-	redis5 := &redisutil.Node{ID: "redis5", Slots: []redisutil.Slot{5, 6, 7, 8}}
-	redis6 := &redisutil.Node{ID: "redis6", Slots: []redisutil.Slot{}}
-	//redis7 := &redisutil.Node{ID: "redis7", Slots: []redisutil.Slot{0, 1, 2, 3}}
-	//redis8 := &redisutil.Node{ID: "redis8", Slots: []redisutil.Slot{4, 5, 6, 7}}
-	//redis9 := &redisutil.Node{ID: "redis9", Slots: []redisutil.Slot{8, 9, 10}}
-
-	redis10 := &redisutil.Node{ID: "redis10", Slots: redisutil.BuildSlotSlice(0, 5461)}
-	redis11 := &redisutil.Node{ID: "redis11", Slots: redisutil.BuildSlotSlice(5462, 10923)}
-	redis12 := &redisutil.Node{ID: "redis12", Slots: redisutil.BuildSlotSlice(10924, 16383)}
-
-	type args struct {
-		newMasterNodes redisutil.Nodes
-		oldMasterNodes redisutil.Nodes
-		allMasterNodes redisutil.Nodes
-		nbSlots        int
-		run            bool
-	}
-	tests := []struct {
-		name string
-		args args
-		want map[string]int
-	}{
-		{
-			name: "2 new nodes",
-			args: args{
-				newMasterNodes: redisutil.Nodes{redis1, redis2, redis3},
-				oldMasterNodes: redisutil.Nodes{redis1},
-				allMasterNodes: redisutil.Nodes{redis1, redis2, redis3},
-				nbSlots:        9,
-			},
-			want: map[string]int{
-				redis2.ID: 3,
-				redis3.ID: 3,
-			},
-		},
-		{
-			name: "1 new node",
-			args: args{
-				newMasterNodes: redisutil.Nodes{redis1, redis2},
-				oldMasterNodes: redisutil.Nodes{redis1},
-				allMasterNodes: redisutil.Nodes{redis1, redis2},
-				nbSlots:        9,
-			},
-			want: map[string]int{
-				redis2.ID: 4,
-			},
-		},
-		{
-			name: "2 new nodes, one removed",
-			args: args{
-				newMasterNodes: redisutil.Nodes{redis4, redis2, redis3},
-				oldMasterNodes: redisutil.Nodes{redis4, redis5},
-				allMasterNodes: redisutil.Nodes{redis4, redis2, redis3, redis5},
-				nbSlots:        9,
-			},
-			want: map[string]int{
-				redis2.ID: 3,
-				redis3.ID: 3,
-			},
-		},
-		{
-			name: "3 new nodes, 0 removed",
-			args: args{
-				newMasterNodes: redisutil.Nodes{redis2, redis3, redis6},
-				oldMasterNodes: redisutil.Nodes{},
-				allMasterNodes: redisutil.Nodes{redis2, redis3, redis6},
-				nbSlots:        11,
-			},
-			want: map[string]int{
-				redis2.ID: 4,
-				redis3.ID: 4,
-				redis6.ID: 3,
-			},
-		},
-		{
-			name: "4 new nodes, 3 removed",
-			args: args{
-				newMasterNodes: redisutil.Nodes{redis10, redis11, redis12, redis2},
-				oldMasterNodes: redisutil.Nodes{redis10, redis11, redis12},
-				allMasterNodes: redisutil.Nodes{redis10, redis11, redis12, redis2, redis3},
-				nbSlots:        16384,
-				run:            true,
-			},
-			want: map[string]int{
-				redis11.ID: 1,
-				redis12.ID: 1,
-				redis2.ID:  4094,
-			},
-		},
-	}
-	for _, tt := range tests {
-		if !tt.args.run {
-			continue
-		}
-		t.Run(tt.name, func(t *testing.T) {
-			got := buildSlotsByNode(tt.args.newMasterNodes, tt.args.oldMasterNodes, tt.args.allMasterNodes, tt.args.nbSlots)
-			gotSlotByNodeID := make(map[string]int)
-			for id, slots := range got {
-				t.Logf("id:%s, len:%d, slots:%d\n", id, len(slots), slots)
-				gotSlotByNodeID[id] = len(slots)
-			}
-			if !reflect.DeepEqual(gotSlotByNodeID, tt.want) {
-				t.Errorf("buildSlotsByNode() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func Test_feedMigInfo(t *testing.T) {
-	redis1 := &redisutil.Node{ID: "redis1", Slots: []redisutil.Slot{0, 1, 2, 3, 4, 5, 6, 7, 8}}
-	redis2 := &redisutil.Node{ID: "redis2", Slots: []redisutil.Slot{}}
-	redis3 := &redisutil.Node{ID: "redis3", Slots: []redisutil.Slot{}}
-
-	type args struct {
-		newMasterNodes redisutil.Nodes
-		oldMasterNodes redisutil.Nodes
-		allMasterNodes redisutil.Nodes
-		nbSlots        int
-	}
-	tests := []struct {
-		name       string
-		args       args
-		wantMapOut mapSlotByMigInfo
-	}{
-		{
-			name: "basic usecase",
-			args: args{
-				newMasterNodes: redisutil.Nodes{redis1, redis2, redis3},
-				oldMasterNodes: redisutil.Nodes{redis1},
-				allMasterNodes: redisutil.Nodes{redis1, redis2, redis3},
-				nbSlots:        9,
-			},
-			wantMapOut: mapSlotByMigInfo{
-				migrationInfo{From: redis1, To: redis2}: []redisutil.Slot{3, 4, 5},
-				migrationInfo{From: redis1, To: redis3}: []redisutil.Slot{6, 7, 8},
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if gotMapOut, _ := feedMigInfo(tt.args.newMasterNodes, tt.args.oldMasterNodes, tt.args.allMasterNodes, tt.args.nbSlots); !reflect.DeepEqual(gotMapOut, tt.wantMapOut) {
-				t.Errorf("feedMigInfo() = %v, want %v", gotMapOut, tt.wantMapOut)
-			}
-		})
-	}
-}
+//func Test_buildSlotsByNode(t *testing.T) {
+//	redis1 := &redisutil.Node{ID: "redis1", Slots: []redisutil.Slot{0, 1, 2, 3, 4, 5, 6, 7, 8}}
+//	redis2 := &redisutil.Node{ID: "redis2", Slots: []redisutil.Slot{}}
+//	redis3 := &redisutil.Node{ID: "redis3", Slots: []redisutil.Slot{}}
+//
+//	redis4 := &redisutil.Node{ID: "redis4", Slots: []redisutil.Slot{0, 1, 2, 3, 4}}
+//	redis5 := &redisutil.Node{ID: "redis5", Slots: []redisutil.Slot{5, 6, 7, 8}}
+//	redis6 := &redisutil.Node{ID: "redis6", Slots: []redisutil.Slot{}}
+//	//redis7 := &redisutil.Node{ID: "redis7", Slots: []redisutil.Slot{0, 1, 2, 3}}
+//	//redis8 := &redisutil.Node{ID: "redis8", Slots: []redisutil.Slot{4, 5, 6, 7}}
+//	//redis9 := &redisutil.Node{ID: "redis9", Slots: []redisutil.Slot{8, 9, 10}}
+//
+//	redis10 := &redisutil.Node{ID: "redis10", Slots: redisutil.BuildSlotSlice(0, 5461)}
+//	redis11 := &redisutil.Node{ID: "redis11", Slots: redisutil.BuildSlotSlice(5462, 10923)}
+//	redis12 := &redisutil.Node{ID: "redis12", Slots: redisutil.BuildSlotSlice(10924, 16383)}
+//
+//	type args struct {
+//		newMasterNodes redisutil.Nodes
+//		oldMasterNodes redisutil.Nodes
+//		allMasterNodes redisutil.Nodes
+//		nbSlots        int
+//		run            bool
+//	}
+//	tests := []struct {
+//		name string
+//		args args
+//		want map[string]int
+//	}{
+//		{
+//			name: "2 new nodes",
+//			args: args{
+//				newMasterNodes: redisutil.Nodes{redis1, redis2, redis3},
+//				oldMasterNodes: redisutil.Nodes{redis1},
+//				allMasterNodes: redisutil.Nodes{redis1, redis2, redis3},
+//				nbSlots:        9,
+//			},
+//			want: map[string]int{
+//				redis2.ID: 3,
+//				redis3.ID: 3,
+//			},
+//		},
+//		{
+//			name: "1 new node",
+//			args: args{
+//				newMasterNodes: redisutil.Nodes{redis1, redis2},
+//				oldMasterNodes: redisutil.Nodes{redis1},
+//				allMasterNodes: redisutil.Nodes{redis1, redis2},
+//				nbSlots:        9,
+//			},
+//			want: map[string]int{
+//				redis2.ID: 4,
+//			},
+//		},
+//		{
+//			name: "2 new nodes, one removed",
+//			args: args{
+//				newMasterNodes: redisutil.Nodes{redis4, redis2, redis3},
+//				oldMasterNodes: redisutil.Nodes{redis4, redis5},
+//				allMasterNodes: redisutil.Nodes{redis4, redis2, redis3, redis5},
+//				nbSlots:        9,
+//			},
+//			want: map[string]int{
+//				redis2.ID: 3,
+//				redis3.ID: 3,
+//			},
+//		},
+//		{
+//			name: "3 new nodes, 0 removed",
+//			args: args{
+//				newMasterNodes: redisutil.Nodes{redis2, redis3, redis6},
+//				oldMasterNodes: redisutil.Nodes{},
+//				allMasterNodes: redisutil.Nodes{redis2, redis3, redis6},
+//				nbSlots:        11,
+//			},
+//			want: map[string]int{
+//				redis2.ID: 4,
+//				redis3.ID: 4,
+//				redis6.ID: 3,
+//			},
+//		},
+//		{
+//			name: "4 new nodes, 3 removed",
+//			args: args{
+//				newMasterNodes: redisutil.Nodes{redis10, redis11, redis12, redis2},
+//				oldMasterNodes: redisutil.Nodes{redis10, redis11, redis12},
+//				allMasterNodes: redisutil.Nodes{redis10, redis11, redis12, redis2, redis3},
+//				nbSlots:        16384,
+//				run:            true,
+//			},
+//			want: map[string]int{
+//				redis11.ID: 1,
+//				redis12.ID: 1,
+//				redis2.ID:  4094,
+//			},
+//		},
+//	}
+//	for _, tt := range tests {
+//		if !tt.args.run {
+//			continue
+//		}
+//		t.Run(tt.name, func(t *testing.T) {
+//			got := buildSlotsByNode(tt.args.newMasterNodes, tt.args.oldMasterNodes, tt.args.allMasterNodes, tt.args.nbSlots)
+//			gotSlotByNodeID := make(map[string]int)
+//			for id, slots := range got {
+//				t.Logf("id:%s, len:%d, slots:%d\n", id, len(slots), slots)
+//				gotSlotByNodeID[id] = len(slots)
+//			}
+//			if !reflect.DeepEqual(gotSlotByNodeID, tt.want) {
+//				t.Errorf("buildSlotsByNode() = %v, want %v", got, tt.want)
+//			}
+//		})
+//	}
+//}
+//
+//func Test_feedMigInfo(t *testing.T) {
+//	redis1 := &redisutil.Node{ID: "redis1", Slots: []redisutil.Slot{0, 1, 2, 3, 4, 5, 6, 7, 8}}
+//	redis2 := &redisutil.Node{ID: "redis2", Slots: []redisutil.Slot{}}
+//	redis3 := &redisutil.Node{ID: "redis3", Slots: []redisutil.Slot{}}
+//
+//	type args struct {
+//		newMasterNodes redisutil.Nodes
+//		oldMasterNodes redisutil.Nodes
+//		allMasterNodes redisutil.Nodes
+//		nbSlots        int
+//	}
+//	tests := []struct {
+//		name       string
+//		args       args
+//		wantMapOut mapSlotByMigInfo
+//	}{
+//		{
+//			name: "basic usecase",
+//			args: args{
+//				newMasterNodes: redisutil.Nodes{redis1, redis2, redis3},
+//				oldMasterNodes: redisutil.Nodes{redis1},
+//				allMasterNodes: redisutil.Nodes{redis1, redis2, redis3},
+//				nbSlots:        9,
+//			},
+//			wantMapOut: mapSlotByMigInfo{
+//				migrationInfo{From: redis1, To: redis2}: []redisutil.Slot{3, 4, 5},
+//				migrationInfo{From: redis1, To: redis3}: []redisutil.Slot{6, 7, 8},
+//			},
+//		},
+//	}
+//	for _, tt := range tests {
+//		t.Run(tt.name, func(t *testing.T) {
+//			if gotMapOut, _ := feedMigInfo(tt.args.newMasterNodes, tt.args.oldMasterNodes, tt.args.allMasterNodes, tt.args.nbSlots); !reflect.DeepEqual(gotMapOut, tt.wantMapOut) {
+//				t.Errorf("feedMigInfo() = %v, want %v", gotMapOut, tt.wantMapOut)
+//			}
+//		})
+//	}
+//}

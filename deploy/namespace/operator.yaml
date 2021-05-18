@@ -1,24 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: redis-cluster-operator
+  name: redis-operator
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: redis-cluster-operator
+      name: redis-operator
   template:
     metadata:
       labels:
-        name: redis-cluster-operator
+        name: redis-operator
     spec:
-      serviceAccountName: redis-cluster-operator
+      serviceAccountName: redis-operator
       containers:
-        - name: redis-cluster-operator
+        - name: redis-operator
           # Replace this with the built image name
-          image: fishu/redis-cluster-operator:latest
+#          todo 需要替换镜像名称
+          image: fishu/redis-operator:latest
           command:
-            - redis-cluster-operator
+            - redis-operator
           args:
             - --rename-command-path=/etc/redisconf
             - --rename-command-file=redis.conf
@@ -33,7 +34,7 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: OPERATOR_NAME
-              value: "redis-cluster-operator"
+              value: "redis-operator"
           volumeMounts:
             - name: redisconf
               mountPath: /etc/redisconf

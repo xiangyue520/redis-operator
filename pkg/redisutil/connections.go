@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	"github.com/mediocregopher/radix.v2/redis"
+	redis "github.com/go-redis/redis/v8"
 	"github.com/xiangyue520/redis-operator/pkg/utils"
 )
 
@@ -51,7 +51,7 @@ type IAdminConnections interface {
 	ReplaceAll(addrs []string)
 	// ValidateResp check the redis resp, eventually reconnect on connection error
 	// in case of error, customize the error, log it and return it
-	ValidateResp(resp *redis.Resp, addr, errMessage string) error
+	ValidateResp(resp *redis.Cmd, addr, errMessage string) error
 	// ValidatePipeResp wait for all answers in the pipe and validate the response
 	// in case of network issue clear the pipe and return
 	// in case of error return false
@@ -286,15 +286,15 @@ func (cnx *AdminConnections) connect(addr string) (IClient, error) {
 
 // ValidateResp check the redis resp, eventually reconnect on connection error
 // in case of error, customize the error, log it and return it
-func (cnx *AdminConnections) ValidateResp(resp *redis.Resp, addr, errMessage string) error {
+func (cnx *AdminConnections) ValidateResp(resp *redis.Cmd, addr, errMessage string) error {
 	if resp == nil {
 		cnx.log.Error(fmt.Errorf("%s: unable to connect to node %s", errMessage, addr), "")
 		return fmt.Errorf("%s: unable to connect to node %s", errMessage, addr)
 	}
-	if resp.Err != nil {
-		cnx.handleError(addr, resp.Err)
-		cnx.log.Error(resp.Err, fmt.Sprintf("%s: unexpected error on node %s", errMessage, addr))
-		return fmt.Errorf("%s: unexpected error on node %s: %v", errMessage, addr, resp.Err)
+	if resp.Err() != nil {
+		cnx.handleError(addr, resp.Err())
+		cnx.log.Error(resp.Err(), fmt.Sprintf("%s: unexpected error on node %s", errMessage, addr))
+		return fmt.Errorf("%s: unexpected error on node %s: %v", errMessage, addr, resp.Err())
 	}
 	return nil
 }
@@ -310,12 +310,12 @@ func (cnx *AdminConnections) ValidatePipeResp(client IClient, addr, errMessage s
 			cnx.log.Error(fmt.Errorf("%s: unable to connect to node %s", errMessage, addr), "")
 			return false
 		}
-		if resp.Err != nil {
-			if resp.Err == redis.ErrPipelineEmpty {
+		if resp.Err() != nil {
+			if resp.Err() == nil  {
 				break
 			}
-			cnx.log.Error(fmt.Errorf("%s: unexpected error on node %s: %v", errMessage, addr, resp.Err), "")
-			if cnx.handleError(addr, resp.Err) {
+			cnx.log.Error(fmt.Errorf("%s: unexpected error on node %s: %v", errMessage, addr, resp.Err()), "")
+			if cnx.handleError(addr, resp.Err()) {
 				// network error, no need to continue
 				return false
 			}

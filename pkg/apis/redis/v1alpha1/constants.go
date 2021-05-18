@@ -8,7 +8,7 @@ const (
 )
 
 const (
-	OperatorName      = "redis-cluster-operator"
+	OperatorName      = "redis-operator"
 	LabelManagedByKey = "managed-by"
 	LabelNameKey      = "distributed-redis-cluster"
 	StatefulSetLabel  = "statefulSet"

@@ -1,5 +1,5 @@
 variables:
-  IMAGE_NAME: $REPO/redis-cluster-operator
+  IMAGE_NAME: $REPO/redis-operator
 
 stages:
 - BuildImage

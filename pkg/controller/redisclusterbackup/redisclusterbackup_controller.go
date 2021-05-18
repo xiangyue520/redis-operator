@@ -60,7 +60,7 @@ func newReconciler(mgr manager.Manager) reconcile.Reconciler {
 	r.crController = k8sutil.NewCRControl(r.client)
 	r.directClient = newDirectClient(mgr.GetConfig())
 	r.jobController = k8sutil.NewJobController(r.directClient)
-	r.recorder = mgr.GetEventRecorderFor("redis-cluster-operator-backup")
+	r.recorder = mgr.GetEventRecorderFor("redis-operator-backup")
 	return r
 }
 

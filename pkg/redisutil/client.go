@@ -4,7 +4,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mediocregopher/radix.v2/redis"
+	redis "github.com/go-redis/redis/v8"
 )
 
 // IClient redis client interface
@@ -13,7 +13,7 @@ type IClient interface {
 	Close() error
 
 	// Cmd calls the given Redis command.
-	Cmd(cmd string, args ...interface{}) *redis.Resp
+	Cmd(cmd string, args ...interface{}) *redis.Cmd
 
 	// PipeAppend adds the given call to the pipeline queue.
 	// Use PipeResp() to read the response.
@@ -21,7 +21,7 @@ type IClient interface {
 
 	// PipeResp returns the reply for the next request in the pipeline queue. Err
 	// with ErrPipelineEmpty is returned if the pipeline queue is empty.
-	PipeResp() *redis.Resp
+	PipeResp() *redis.Cmd
 
 	// PipeClear clears the contents of the current pipeline queue, both commands
 	// queued by PipeAppend which have yet to be sent and responses which have yet
@@ -37,7 +37,8 @@ type IClient interface {
 	//
 	// Note: this is a more low-level function, you really shouldn't have to
 	// actually use it unless you're writing your own pub/sub code
-	ReadResp() *redis.Resp
+	//ReadResp() *redis.Cmd
+	Client() *redis.Client
 }
 
 // Client structure representing a client connection to redis
@@ -53,12 +54,21 @@ func NewClient(addr, password string, cnxTimeout time.Duration, commandsMapping 
 		commandsMapping: commandsMapping,
 	}
 
-	c.client, err = redis.DialTimeout("tcp", addr, cnxTimeout)
-	if err != nil {
-		return c, err
-	}
+	//c.client, err = redis.DialTimeout("tcp", addr, cnxTimeout)
+	c.client = redis.NewClient(&redis.Options{
+		Addr: addr,
+		Password: password,
+		DB: 0,
+		DialTimeout: cnxTimeout,
+	})
+	//执行一次ping命令,然后进行处理
+	ctx := c.client.Context()
+	//cmd:=c.client.Ping(ctx)
+	//fmt.Println(cmd.Val())
+
 	if password != "" {
-		err = c.client.Cmd("AUTH", password).Err
+		err= c.client.Do(ctx,"AUTH", password).Err()
+		//err = c.client.Cmd("AUTH", password).Err
 	}
 	return c, err
 }
@@ -69,8 +79,9 @@ func (c *Client) Close() error {
 }
 
 // Cmd calls the given Redis command.
-func (c *Client) Cmd(cmd string, args ...interface{}) *redis.Resp {
-	return c.client.Cmd(c.getCommand(cmd), args)
+func (c *Client) Cmd(cmd string, args ...interface{}) *redis.Cmd {
+
+	return c.client.Do(c.client.Context(),c.getCommand(cmd), args)
 }
 
 // getCommand return the command name after applying rename-command
@@ -84,20 +95,30 @@ func (c *Client) getCommand(cmd string) string {
 
 // PipeAppend adds the given call to the pipeline queue.
 func (c *Client) PipeAppend(cmd string, args ...interface{}) {
-	c.client.PipeAppend(c.getCommand(cmd), args)
+	ctx:=c.client.Context()
+	//c.client.Pipeline().Append(ctx,c.getCommand(cmd),args)
+	c.client.Pipelined(ctx, func(pipe redis.Pipeliner) error {
+		return pipe.Do(ctx,c.getCommand(cmd),args).Err()
+	})
 }
 
 // PipeResp returns the reply for the next request in the pipeline queue. Err
-func (c *Client) PipeResp() *redis.Resp {
-	return c.client.PipeResp()
+func (c *Client) PipeResp() *redis.Cmd {
+	ctx:=c.client.Context()
+	//todo 需要做pipeline的回复
+	return c.client.Pipeline().Do(ctx,"ping")
 }
 
 // PipeClear clears the contents of the current pipeline queue
 func (c *Client) PipeClear() (int, int) {
-	return c.client.PipeClear()
+	return 1,2
+}
+
+func (c *Client)Client() *redis.Client{
+	return c.client
 }
 
 // ReadResp will read a Resp off of the connection without sending anything
-func (c *Client) ReadResp() *redis.Resp {
-	return c.client.ReadResp()
-}
+//func (c *Client) ReadResp() *redis.Cmd {
+//	return c.client.Read
+//}

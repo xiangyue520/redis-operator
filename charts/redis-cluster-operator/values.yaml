@@ -1,11 +1,11 @@
 operator:
   backup_enabled: "false"
-  name: "redis-cluster-operator"
+  name: "redis-operator"
   replicas: 1
-  service_account_name: "redis-cluster-operator"
+  service_account_name: "redis-operator"
   namespace: ""  # keep this value "" if you want to deploy cluster-wide operator
-  image_source: "fishu/redis-cluster-operator"
-  image_tag: "latest"
+  image_source: "xiangyue520/redis-operator"
+  image_tag: "v0.2.5"
   imagePullPolicy: "IfNotPresent"
   resources:
     limits:

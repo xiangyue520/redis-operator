@@ -5,7 +5,7 @@ kind: ClusterRole
 kind: Role
 {{- end }}
 metadata:
-  name: redis-cluster-operator
+  name: redis-operator
 rules:
   - apiGroups:
       - ""

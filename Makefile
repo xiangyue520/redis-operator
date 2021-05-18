@@ -4,10 +4,13 @@ PROJECT_NAME=redis-operator
 REPO=xiangyue520/$(PROJECT_NAME)
 
 # replace with your public registry
-ALTREPO=$(DOCKER_REGISTRY)/$(PROJECT_NAME)
+# ALTREPO=$(DOCKER_REGISTRY)/$(PROJECT_NAME)
+
+ALTREPO=xiangyue520/$(PROJECT_NAME)
 E2EALTREPO=$(DOCKER_REGISTRY)/$(PROJECT_NAME)-e2e
 
-VERSION=$(shell git describe --always --tags --dirty | sed "s/\(.*\)-g`git rev-parse --short HEAD`/\1/")
+# VERSION=$(shell git describe --always --tags --dirty | sed "s/\(.*\)-g`git rev-parse --short HEAD`/\1/")
+VERSION=$(shell git tag | sort -r|awk 'NR==1{print}')
 GIT_SHA=$(shell git rev-parse --short HEAD)
 BIN_DIR=build/bin
 .PHONY: all build check clean test login build-e2e push push-e2e build-tools
@@ -25,6 +28,7 @@ build-go:
 	-o $(BIN_DIR)/$(PROJECT_NAME)-darwin-amd64 cmd/manager/main.go
 
 build-image:
+# 	docker build --build-arg VERSION=$(VERSION) --build-arg GIT_SHA=$(GIT_SHA) -t $(ALTREPO):$(VERSION) .
 	docker build --build-arg VERSION=$(VERSION) --build-arg GIT_SHA=$(GIT_SHA) -t $(ALTREPO):$(VERSION) .
 	docker tag $(ALTREPO):$(VERSION) $(ALTREPO):latest
 
